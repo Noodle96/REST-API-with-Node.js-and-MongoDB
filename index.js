@@ -1,8 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-
+const Product = require('./models/Product');
 const app = express();
+
+//Request: What fronted sends us.
+// Response: What we send back to the Clientt.
+
 //Accept request body from the client
 app.use(express.json());
 
@@ -20,12 +24,14 @@ mongoose.connection.on('error', (err) => {
 	console.log('Mongoose connection error:', err);
 });
 
-//Collection: Table
-//Document: Row
 
-//Request: What fronted sends us.
-// Response: What we send back to the Clientt.
-app.post('/', (req, res) => {
-	console.log(req.body);
-	res.send('Hello World since index.js');
+
+// 201: Created
+//500: Internal Server Error
+app.post('/products', (request, response) => {
+	Product.create(request.body).then((newProduct) => {
+		return response.status(201).json(newProduct);
+	}).catch((error)=>{
+		return response.status(500).json({error: error.message});
+	});
 });
