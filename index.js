@@ -28,10 +28,18 @@ mongoose.connection.on('error', (err) => {
 
 // 201: Created
 //500: Internal Server Error
-app.post('/products', (request, response) => {
-	Product.create(request.body).then((newProduct) => {
+// app.post('/products', (request, response) => {
+// 	Product.create(request.body).then((newProduct) => {
+// 		return response.status(201).json(newProduct);
+// 	}).catch((error)=>{
+// 		return response.status(500).json({error: error.message});
+// 	});
+// });
+app.post('/products', async(request, response) => {
+	try{
+		const newProduct = await Product.create(request.body);
 		return response.status(201).json(newProduct);
-	}).catch((error)=>{
+	}catch(error){
 		return response.status(500).json({error: error.message});
-	});
+	}
 });
